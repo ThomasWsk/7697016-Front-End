@@ -217,4 +217,4 @@ sectionFiches.appendChild(nomElement);
 sectionFiches.appendChild(prixElement);
 sectionFiches.appendChild(categorieElement);
 
-sectionFiches.innerText = "klfkldjfkldsjlkfjdsdsdsdsdslsd";
+sectionFiches.innerText = "lorem ipsu";
