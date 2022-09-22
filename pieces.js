@@ -1,3 +1,5 @@
+import { listenerAvis } from "./avis";
+
 // Récupération des pièces depuis le fichier JSON
 const pieces = await fetch("pieces-autos.json").then((pieces) => pieces.json());
 
@@ -46,12 +48,23 @@ function generatePieces(pieces) {
 			: "Rupture de stock";
 		pieceElement.appendChild(disponibiliteElement);
 
+		// Bouton pour afficher les avis
+		const avisElement = document.createElement("button");
+		avisElement.innerText = "Afficher les avis";
+		avisElement.dataset.id = pieces[i].id; // Attribut data-id="XX"
+		pieceElement.appendChild(avisElement);	
+
 		// On rattache la balise article à la section fiches
 		sectionFiches.appendChild(pieceElement);
 	}
+	
+	// Ajout listeners sur les boutons avis
+	listenerAvis();
+	
 }
 
 generatePieces(pieces);
+
 
 // Ajout du listener pour trier les pièces par ordre de prix croissant
 const boutonTrier = document.querySelector(".btn-trier");
