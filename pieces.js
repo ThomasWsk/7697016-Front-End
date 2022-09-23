@@ -1,4 +1,4 @@
-import { listenerAvis } from "./avis";
+import { listenerAvis } from "./avis.js";
 
 // Récupération des pièces depuis le fichier JSON
 const pieces = await fetch("pieces-autos.json").then((pieces) => pieces.json());
@@ -52,19 +52,18 @@ function generatePieces(pieces) {
 		const avisElement = document.createElement("button");
 		avisElement.innerText = "Afficher les avis";
 		avisElement.dataset.id = pieces[i].id; // Attribut data-id="XX"
-		pieceElement.appendChild(avisElement);	
+		pieceElement.appendChild(avisElement);
 
 		// On rattache la balise article à la section fiches
 		sectionFiches.appendChild(pieceElement);
 	}
-	
+
 	// Ajout listeners sur les boutons avis
 	listenerAvis();
 	
 }
 
 generatePieces(pieces);
-
 
 // Ajout du listener pour trier les pièces par ordre de prix croissant
 const boutonTrier = document.querySelector(".btn-trier");
@@ -177,18 +176,16 @@ document.querySelector(".disponibles").appendChild(elementDisponible);
 //console.log(nomDisponible);
 ///////////////////////////  Verions cours ///////////////////////////
 
-
 const maxPrice = document.querySelector("#max-price");
-maxPrice.addEventListener("input", function(){
+maxPrice.addEventListener("input", function () {
 	const piecesFiltrees = pieces.filter(function (piece) {
 		return piece.prix <= maxPrice.value;
 	});
 
 	// Effacement + regénération de la page
-	document.querySelector(".fiches").innerHTML = "";	
+	document.querySelector(".fiches").innerHTML = "";
 	generatePieces(piecesFiltrees);
 	// Affichage du prix maximum selectionné
 	const price = document.querySelector(".price");
 	price.innerText = `${maxPrice.value}` + "€";
-
 });
