@@ -1,8 +1,20 @@
-import { listenerAvis } from "./avis.js";
+import { listenerAvis, afficherAvis } from "./avis.js";
 
-// Récupération des pièces depuis le fichier JSON
-const pieces = await fetch("pieces-autos.json").then((pieces) => pieces.json());
+let pieces = window.localStorage.getItem("pieces");
 
+if(pieces === null){
+
+	// Récuperation des pièces depuis l'API HTTP
+	const response = await fetch("http://localhost:8081/pieces");
+	const pieces = await response.json();
+
+	// Transformation des pieces en JSON
+	const valeurPieces = JSON.stringify(pieces);
+	// Stockage en local
+	window.localStorage.setItem("pieces", valeurPieces);
+} else {
+	pieces = JSON.parse(pieces);
+}
 // Fonction qui génère la page web
 function generatePieces(pieces) {
 	for (let i = 0; i < pieces.length; i++) {
@@ -10,6 +22,7 @@ function generatePieces(pieces) {
 		const sectionFiches = document.querySelector(".fiches");
 		//Balise dédié à une pièce automobile
 		const pieceElement = document.createElement("article");
+		pieceElement.dataset.id = pieces[i].id;
 
 		//Image
 		const imageElement = document.createElement("img");
@@ -65,6 +78,18 @@ function generatePieces(pieces) {
 
 generatePieces(pieces);
 
+// Affichage des avis si ils sont présents dans le localStorage
+for(let i =0; i < pieces.length; i++){
+	const id = pieces[i].id;
+	const avisJSON = window.localStorage.getItem("avis-piece-" + id);
+	const avis = JSON.parse(avisJSON);
+
+	if (avis !== null){
+		const pieceElement = document.querySelector(`[data-id="${id}]`);
+		afficherAvis(pieceElement, avis);
+	}
+}
+
 // Ajout du listener pour trier les pièces par ordre de prix croissant
 const boutonTrier = document.querySelector(".btn-trier");
 boutonTrier.addEventListener("click", function () {
@@ -105,6 +130,12 @@ boutonDecroissant.addEventListener("click", function () {
 		return b.prix - a.prix;
 	});
 	//console.log(piecesDecroissant);
+});
+
+// Ajout listener pour maj des données en localStorage
+const btnMaj = document.querySelector(".btn-maj");
+btnMaj.addEventListener("click", function() {
+	window.localStorage.removeItem("pieces");
 });
 
 // Récupération du nom des pièces
